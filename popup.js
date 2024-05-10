@@ -25,11 +25,6 @@ const blockUrl = () => {
   }
 };
 
-const truncateString = (string) => {
-  const link = string.slice(0, 20);
-  return `${link}...`;
-};
-
 const updateList = () => {
   const getData = window.localStorage.getItem("data");
   const data = JSON.parse(getData);
@@ -41,7 +36,7 @@ const updateList = () => {
     data.forEach((result, index) => {
       card += `
       <div class="blockedCard">
-        <p>${truncateString(result.url)}</p>
+        <p>${result.url.slice(0, 20)}...</p>
         <p>${result.time}</p>
         <button class="unBlockButton" data-index="${index}">UNBLOCK</button>
       </div>
@@ -78,3 +73,9 @@ const sendToBackground = () => {
     chrome.runtime.sendMessage(data);
   }
 };
+
+// Listen for messages from the background script
+chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
+  window.localStorage.setItem("data", JSON.stringify(data));
+  console.log("data has been sent");
+});
