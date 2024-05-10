@@ -21,29 +21,22 @@
 // //   }
 // // };
 
-const getData = (url) => {
+const getDataAndSendToContent = () => {
   chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
-    console.log(data);
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0];
+      chrome.tabs.sendMessage(activeTab.id, data);
+    });
   });
 };
 // Listen for tab updates
 chrome.tabs.onUpdated.addListener((changeInfo) => {
-  console.log(changeInfo);
-  if (changeInfo.status === "complete") {
-    // const currentUrl = changeInfo.url;
-    // console.log(currentUrl);
-    // console.log("this is the changed info url", currentUrl);
-    // getData(currentUrl);
-  }
+  getDataAndSendToContent();
+  console.log("tabchanged");
 });
 
-// chrome.tabs.onActivated.addListener((activeInfo) => {
-//   // how to fetch tab url using activeInfo.tabid
-//   chrome.tabs.get(activeInfo.tabId, (tab) => {
-//     if (tab.status === "complete") {
-//       const currentUrl = tab.url;
-//       console.log("this is the current url", currentUrl);
-//       getData(currentUrl);
-//     }
-//   });
-// });
+chrome.tabs.onActivated.addListener((activeInfo) => {
+  // how to fetch tab url using activeInfo.tabid
+  getDataAndSendToContent();
+  console.log("tabactivated");
+});

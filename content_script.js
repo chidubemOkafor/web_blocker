@@ -1,26 +1,47 @@
-console.log("this is the content script.js");
-
-chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
-  blockSite(data);
-});
 const blockSite = (data) => {
-  console.log("Message received in content script:", data);
+  console.log("Blocking sites with data:", data);
 
   const href = window.location.href;
-  console.log(href);
+  console.log("Current URL:", href);
 
   for (let i = 0; i < data.length; i++) {
     if (href.includes(data[i].url)) {
-      console.log("the data is here");
+      console.log("Blocking website:", data[i].url);
       document.body.innerHTML = `
-              <div class= "mainDIv">
-                <p class="text">
-                  The website ${href} successfully blocked !
-                </p>
-              </div>
-        `;
-      break;
+        <div class="mainDIv">
+          <p class="text">
+            The website ${data[i].url} is successfully blocked until ${
+        data[i].time
+      } ${getTime(data[i].time)}
+          </p>
+        </div>
+      `;
+      return; // Exit the loop after blocking the site
     }
-    console.log("the data is not here");
   }
+
+  console.log("No matching website found to block.");
 };
+
+// Helper function to determine whether it's AM or PM
+const getTime = (time) => {
+  const hour = parseInt(time.split(":")[0]);
+  return hour >= 12 ? "pm" : "am";
+};
+
+console.log("this is the content script.js");
+
+// Always listen for messages from the background script
+chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
+  console.log("Data received from background script:", data);
+  window.localStorage.setItem("data", JSON.stringify(data));
+  const localData = JSON.parse(window.localStorage.getItem("data"));
+  blockSite(localData);
+});
+
+// Get data from localStorage and block sites if data is available
+const newData = window.localStorage.getItem("data");
+if (newData !== null) {
+  const data = JSON.parse(newData);
+  blockSite(data);
+}

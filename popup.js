@@ -25,6 +25,11 @@ const blockUrl = () => {
   }
 };
 
+const truncateString = (string) => {
+  const link = string.slice(0, 20);
+  return `${link}...`;
+};
+
 const updateList = () => {
   const getData = window.localStorage.getItem("data");
   const data = JSON.parse(getData);
@@ -36,7 +41,7 @@ const updateList = () => {
     data.forEach((result, index) => {
       card += `
       <div class="blockedCard">
-        <p>${result.url}</p>
+        <p>${truncateString(result.url)}</p>
         <p>${result.time}</p>
         <button class="unBlockButton" data-index="${index}">UNBLOCK</button>
       </div>
@@ -70,8 +75,6 @@ const sendToBackground = () => {
   const getData = window.localStorage.getItem("data");
   if (getData !== null) {
     const data = JSON.parse(getData);
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, data);
-    });
+    chrome.runtime.sendMessage(data);
   }
 };
