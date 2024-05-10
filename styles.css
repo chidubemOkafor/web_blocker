@@ -37,7 +37,7 @@ h1 {
 }
 
 .url {
-    width: 100%;
+    width: 96%;
     height: 3em;
     border-radius: 10px;
     border: 0;
@@ -53,7 +53,6 @@ h1 {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
-    overflow-y: hidden;
     overflow-y: scroll;
     gap: 10px;
     background-color:rgb(0, 0, 0, 0.1);
@@ -64,7 +63,8 @@ h1 {
     background-color: rgb(0, 0, 0, 0.3);
     display: flex;
     padding: 5px;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    padding: 10px 10px;
     border-radius: 10px;
 }
 
