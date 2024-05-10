@@ -23,24 +23,6 @@ const blockSite = (data) => {
   console.log("No matching website found to block.");
 };
 
-const checkTime = () => {
-  const getData = JSON.parse(window.localStorage.getItem("data"));
-  const currentDate = new Date();
-  const time = currentDate.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  console.log(time);
-
-  for (let i = 0; i < getData.length; i++) {
-    if (getData[i].time === time.toString()) {
-      getData.splice(i, 1);
-      chrome.runtime.sendMessage(data);
-    }
-    console.log("not yet time");
-  }
-};
-
 // Helper function to determine whether it's AM or PM
 const getTime = (time) => {
   const hour = parseInt(time.split(":")[0]);
@@ -63,3 +45,25 @@ if (newData !== null) {
   const data = JSON.parse(newData);
   blockSite(data);
 }
+
+const checkTime = () => {
+  const getData = JSON.parse(window.localStorage.getItem("data"));
+  const currentDate = new Date();
+  const time = currentDate.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  console.log("Current time:", time);
+
+  for (let i = 0; i < getData.length; i++) {
+    if (getData[i].time === time) {
+      console.log("It's time to remove:", getData[i]);
+      getData.splice(i, 1);
+      window.localStorage.setItem("data", JSON.stringify(getData));
+      chrome.runtime.sendMessage(getData);
+      break;
+    }
+  }
+};
+
+checkTime();

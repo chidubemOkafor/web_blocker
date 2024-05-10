@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("blockButton").addEventListener("click", blockUrl);
-  updateList();
+  if (JSON.parse(window.localStorage.getItem("data")) !== null) {
+    updateList();
+  }
+
   sendToBackground();
 });
 

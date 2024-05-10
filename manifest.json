@@ -20,7 +20,7 @@
     ],
     "action": {
       "default_popup": "hello.html",
-      "default_icon": "./images/pageLockIcon.png"
+      "default_icon": "./images/timer.png"
     }
   }
   
