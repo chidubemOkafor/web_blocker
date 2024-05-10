@@ -37,6 +37,7 @@ const checkTime = () => {
       getData.splice(i, 1);
       chrome.runtime.sendMessage(data);
     }
+    console.log("not yet time");
   }
 };
 
